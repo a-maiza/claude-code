@@ -1,6 +1,6 @@
-# /init et le fichier CLAUDE.md dans Claude Code
+# init et le fichier CLAUDE.md dans Claude Code
 
-## Sujet du cours
+## Sujet
 Utilisation de la commande **/init** et du fichier **CLAUDE.md** pour donner à Claude Code une compréhension persistante d’un projet, de son architecture et des conventions de travail de l’équipe.
 
 ---
@@ -192,7 +192,7 @@ Claude exécute alors automatiquement toute la boucle de test et de correction.
 Exemple : implémentation de l’endpoint
 
 >  Implement the POST /api/auth/register endpoint from task 1.3 Make sure all test pass befor marking it complete.
- 
+
 
 Lors de cette tâche, Claude :
 
@@ -264,7 +264,7 @@ Lorsque l’historique devient trop volumineux :
 1. Claude détecte que le contexte approche de la limite.
 2. Il résume automatiquement les anciennes parties de la conversation.
 3. Le contexte libéré permet de continuer la discussion.
-4. 
+4.
 ---
 
 ## Exemples importants
@@ -277,7 +277,7 @@ Exemple d’utilisation du contexte :
 - les anciens messages sont résumés
 - l’historique revient à environ **40k tokens**.
 
-![img.png](img.png)
+![img.png](img_2.png)
 ---
 
 ## Points à retenir
@@ -303,7 +303,7 @@ Exemple d’utilisation du contexte :
 
 4. **Créer des résumés de modules**  
    Documenter certaines parties du code pour pouvoir les référencer rapidement.
-> Create a summary of the authentification module - what files are involved, how they connect, and what patterns they use. 
+> Create a summary of the authentification module - what files are involved, how they connect, and what patterns they use.
 5. **Démarrer de nouvelles conversations régulièrement**  
    Éviter que l’historique devienne trop volumineux.
 

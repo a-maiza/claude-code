@@ -1,133 +1,130 @@
 # Dépannage (Troubleshooting) avec Claude Code
 
-## Sujet
-Identification des **problèmes courants lors de l’utilisation de Claude Code** et des méthodes simples pour les résoudre afin de maintenir un workflow de développement fluide.
+Guide de référence pour identifier et résoudre les problèmes courants lors de l'utilisation de Claude Code, afin de maintenir un workflow de développement fluide.
 
 ---
 
-## Concepts clés
-- **Commandes utiles de diagnostic** :
-    - `/config` : vérifier la configuration et les clés API.
-    - `/login` : se reconnecter ou renouveler l’authentification.
-    - `/usage` : consulter l’utilisation actuelle et les quotas.
-- **Limites d’usage** :
-    - limites de session
-    - quotas hebdomadaires
-    - rate limits (tokens par minute).
-- **Gestion du contexte et des réponses longues**.
+## Table des matières
+
+- [Commandes de diagnostic](#commandes-de-diagnostic)
+- [Problèmes courants et solutions](#problèmes-courants-et-solutions)
+  - [1. Erreurs d'authentification](#1-erreurs-dauthentification)
+  - [2. Limites d'utilisation](#2-limites-dutilisation)
+  - [3. Réponses tronquées](#3-réponses-tronquées)
+  - [4. Perte de contexte](#4-perte-de-contexte)
+  - [5. Boucle de corrections répétitives](#5-boucle-de-corrections-répétitives)
+- [Points à retenir](#points-à-retenir)
 
 ---
 
-## Explications essentielles
-Même avec une configuration correcte, certains problèmes peuvent apparaître lors de l’utilisation de Claude Code. Les plus fréquents concernent :
+## Commandes de diagnostic
 
-- l’authentification
-- les limites d’utilisation
-- les réponses tronquées
-- la perte de contexte
-- les boucles de correction répétitives.
-
-Ces problèmes ont généralement **des solutions simples** et ne nécessitent pas de modifications complexes.
+| Commande | Description |
+|---|---|
+| **`/config`** | Vérifier la configuration et les clés API |
+| **`/login`** | Se reconnecter ou renouveler l'authentification |
+| **`/usage`** | Consulter l'utilisation actuelle et les quotas |
 
 ---
 
-## Méthodes / Raisonnements
+## Problèmes courants et solutions
 
-### 1. Erreurs d’authentification
-Symptômes possibles :
-- clé API invalide
-- erreur de connexion.
+### 1. Erreurs d'authentification
 
-Solutions :
-- vérifier la configuration avec **`/config`**
-- relancer l’authentification avec **`/login`**
-- corriger ou renouveler la clé API.
+**Symptômes :** clé API invalide, erreur de connexion.
+
+**Solutions :**
+
+- Vérifier la configuration avec `/config`
+- Relancer l'authentification avec `/login`
+- Corriger ou renouveler la clé API
 
 ---
 
-### 2. Limites d’utilisation
-Si trop de requêtes sont effectuées :
+### 2. Limites d'utilisation
 
-- Claude peut ralentir
-- des erreurs de **quota ou rate limit** peuvent apparaître.
+**Symptômes :** ralentissements, erreurs de quota ou de rate limit.
 
-Avec la commande **`/usage`**, il est possible de vérifier :
+La commande `/usage` permet de vérifier l'utilisation de la session actuelle et le quota hebdomadaire.
 
-- l’utilisation de la session actuelle
-- l’utilisation hebdomadaire.
+**Types de limites :**
 
-Caractéristiques des limites :
+| Type | Description |
+|---|---|
+| **Session** | Fenêtre glissante d'environ 5 heures avec un plafond |
+| **Quota hebdomadaire** | Limite globale sur 7 jours |
+| **Rate limit** | Limitation temporaire du nombre de tokens par minute |
 
-- **session** : fenêtre glissante d’environ **5 heures** avec un plafond
-- **quota hebdomadaire**
-- **rate limit** : limitation temporaire du nombre de tokens par minute.
+**Stratégies pour réduire la consommation :**
 
-Stratégies pour réduire la consommation :
-
-- utiliser **Plan Mode** pour l’exploration
-- commencer **de nouvelles conversations**
-- diviser les tâches en **plus petits lots de fichiers**.
+- Utiliser **Plan Mode** pour l'exploration (moins coûteux)
+- Démarrer de **nouvelles conversations** plutôt que d'allonger les existantes
+- Diviser les tâches en **lots de fichiers plus petits**
 
 ---
 
 ### 3. Réponses tronquées
-Parfois une réponse s’arrête au milieu du code.
 
-Cause :
-- la réponse dépasse la taille maximale d’un message.
+**Symptôme :** la réponse s'arrête au milieu du code.
 
-Solution :
-- demander simplement **« continue à partir d’où tu t’es arrêté »**.
-```text 
-please continue from where you left off
+**Cause :** la réponse dépasse la taille maximale d'un message.
+
+**Solution :** demander à Claude de continuer là où il s'est arrêté.
+
+```text
+Please continue from where you left off.
 ```
 
-Prévention :
-- demander le code **en plusieurs parties** plutôt qu’en une seule réponse.
-```text 
-instead of 'Implement all the endpoints' use 'Implement the GET and POST endpoint for symptoms'
+**Prévention :** demander le code en plusieurs parties plutôt qu'en une seule réponse.
+
+```text
+# ❌ Trop large
+Implement all the endpoints
+
+# ✅ Ciblé
+Implement the GET and POST endpoints for symptoms
 ```
+
 ---
 
 ### 4. Perte de contexte
-Claude peut sembler oublier des informations ou des fichiers utilisés plus tôt dans la conversation.
 
-Cause :
-- les anciens éléments ont été retirés du contexte pour faire place à de nouveaux messages.
+**Symptôme :** Claude semble oublier des informations ou des fichiers utilisés plus tôt dans la conversation.
 
-Solution :
-- **référencer à nouveau le fichier** avec `@fichier`.
+**Cause :** les anciens éléments ont été retirés du contexte pour faire place à de nouveaux messages.
 
-Exemple :
-```text 
-Looking at @backend/src/controllers/authController.ts, let’s continue working on the password reset function 
+**Solution :** référencer à nouveau le fichier avec `@fichier`.
+
+```text
+Looking at @backend/src/controllers/authController.ts, let's continue working
+on the password reset function.
 ```
 
-
-Claude recharge alors le fichier dans le contexte.
+Claude recharge le fichier dans le contexte et reprend là où la conversation s'était arrêtée.
 
 ---
 
 ### 5. Boucle de corrections répétitives
-Claude peut parfois essayer plusieurs fois la **même approche incorrecte**.
 
-Exemple :
-- tentative répétée de corriger une validation regex qui échoue toujours.
+**Symptôme :** Claude tente plusieurs fois la même approche incorrecte sans progresser.
 
-Solution :
-- fournir **une nouvelle direction claire**.
+**Exemple :** tentative répétée de corriger une validation regex qui échoue toujours.
 
-Exemple :
-- remplacer la regex par un **validateur intégré (ex. Zod email validator)**.
+**Solution :** fournir une nouvelle direction claire en proposant une approche alternative.
+
+**Exemple :** demander de remplacer la regex par un validateur intégré comme Zod.
 
 ---
 
 ## Points à retenir
-- La plupart des problèmes rencontrés avec Claude Code ont **des solutions rapides**.
-- **Authentification** : vérifier `/config` ou relancer `/login`.
-- **Limites d’usage** : consulter `/usage` et réduire la taille des tâches.
-- **Réponses tronquées** : demander à Claude de continuer.
-- **Perte de contexte** : recharger les fichiers avec `@`.
-- **Boucles d’erreurs** : proposer une approche alternative.
 
-Une bonne gestion des prompts, du contexte et des limites d’usage permet de résoudre la majorité des difficultés rencontrées.
+| Problème | Solution rapide |
+|---|---|
+| Erreur d'authentification | `/config` ou `/login` |
+| Limite d'usage atteinte | `/usage`, réduire la taille des tâches |
+| Réponse tronquée | `Please continue from where you left off` |
+| Perte de contexte | Recharger les fichiers avec `@fichier` |
+| Boucle d'erreurs | Proposer une approche alternative |
+
+La plupart des problèmes rencontrés avec Claude Code ont des solutions rapides. Une bonne gestion des prompts, du contexte et des limites d'usage permet de résoudre la grande majorité des difficultés.
+
