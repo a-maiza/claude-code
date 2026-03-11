@@ -182,7 +182,6 @@ Before marking any task as complete:
     - Analyse the failure output
     - Fix the code (no the test, unless tests are incorrect)
     - Re-Run tests until all pass
-4. 
 ```
 
 Claude exécute alors automatiquement toute la boucle de test et de correction.
